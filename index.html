@@ -4,79 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>單字隨身記</title>
-    <!-- 讀取同資料夾下的資料檔 -->
     <script src="vocab_data.js"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; text-align: center; padding: 20px; color: #333; }
-        .page { display: none; padding: 20px; }
+        body { font-family: sans-serif; background-color: #f4f7f6; text-align: center; padding: 20px; }
+        .page { display: none; }
         .active { display: block; }
-        button { background-color: #4a90e2; color: white; border: none; padding: 12px 25px; margin: 8px; font-size: 16px; border-radius: 25px; cursor: pointer; transition: 0.3s; }
-        button:hover { background-color: #357abd; }
-        #quiz-card { background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 40px; border-radius: 20px; max-width: 350px; margin: 20px auto; }
-        h1 { color: #2c3e50; }
-        #question { font-size: 24px; margin-bottom: 20px; }
-        #answer { font-size: 20px; font-weight: bold; padding-top: 15px; border-top: 1px solid #eee; margin-top: 15px; }
+        button { background-color: #4a90e2; color: white; border: none; padding: 15px 30px; margin: 10px; font-size: 18px; border-radius: 25px; cursor: pointer; }
+        #quiz-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 300px; margin: 20px auto; }
     </style>
 </head>
 <body>
 
     <div id="page-home" class="page active">
         <h1>📖 單字隨身記</h1>
-        <button onclick="goToUnit('b1')">第一冊</button>
-        <button onclick="alert('第二冊開發中')">第二冊</button>
+        <button onclick="goToUnit('b1')">第一冊：開始測驗</button>
     </div>
 
     <div id="page-units" class="page">
         <h1>選擇 Unit</h1>
         <div id="unit-buttons"></div>
-        <br><button onclick="showPage('page-home')">回主頁</button>
     </div>
 
     <div id="page-quiz" class="page">
         <div id="quiz-card">
             <h2 id="question">單字</h2>
-            <h3 id="answer" style="display:none; color: #d32f2f;">答案</h3>
+            <h3 id="answer" style="color: #d32f2f;">(點擊看答案)</h3>
         </div>
         <button onclick="reveal()">看答案</button>
         <button onclick="nextWord()">下一題</button>
-        <br><button onclick="showPage('page-units')">回列表</button>
     </div>
 
     <script>
         let filteredVocab = [];
-        function showPage(pageId) {
+        function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
+            document.getElementById(id).classList.add('active');
         }
-
-        function goToUnit(bookId) {
+        function goToUnit(book) {
             const container = document.getElementById('unit-buttons');
             container.innerHTML = '';
             for(let i=1; i<=10; i++) {
                 let btn = document.createElement('button');
                 btn.innerText = 'Unit ' + i;
-                btn.onclick = () => startQuiz(bookId, i);
+                btn.onclick = () => {
+                    filteredVocab = vocabData.filter(w => w.book === book && w.unit === i);
+                    if(filteredVocab.length === 0) alert('此單元暫無資料');
+                    else { showPage('page-quiz'); nextWord(); }
+                };
                 container.appendChild(btn);
             }
             showPage('page-units');
         }
-
-        function startQuiz(book, unit) {
-            filteredVocab = vocabData.filter(w => w.book === book && w.unit === unit);
-            if(filteredVocab.length === 0) { alert('該單元暫無資料'); return; }
-            showPage('page-quiz');
-            nextWord();
-        }
-
         function nextWord() {
-            let currentWord = filteredVocab[Math.floor(Math.random() * filteredVocab.length)];
-            document.getElementById('question').innerText = currentWord.eng;
-            document.getElementById('answer').innerText = currentWord.ch;
-            document.getElementById('answer').style.display = 'none';
+            let w = filteredVocab[Math.floor(Math.random() * filteredVocab.length)];
+            document.getElementById('question').innerText = w.eng;
+            document.getElementById('answer').innerText = "點擊看答案";
         }
-
         function reveal() {
-            document.getElementById('answer').style.display = 'block';
+            let eng = document.getElementById('question').innerText;
+            let w = vocabData.find(x => x.eng === eng);
+            document.getElementById('answer').innerText = w.ch;
         }
     </script>
 </body>
