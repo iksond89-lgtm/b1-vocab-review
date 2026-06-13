@@ -1,12 +1,7 @@
 
 // vocab_data.js
 const vocabData = [
-  { "book": "b1", "unit": 1, "eng": "abandon", "ch": "拋棄；捨棄；放棄" },
-  { "book": "b1", "unit": 1, "eng": "advantage", "ch": "優勢；益處" },
-  // ... 
-export const b1Vocab = [
-  // ←←← [
-  { "book": "b1", "unit": 1, "eng": "abandon", "ch": "拋棄；捨棄；放棄" },
+{ "book": "b1", "unit": 1, "eng": "abandon", "ch": "拋棄；捨棄；放棄" },
   { "book": "b1", "unit": 1, "eng": "advantage", "ch": "優勢；益處" },
   { "book": "b1", "unit": 1, "eng": "amaze", "ch": "使吃驚" },
   { "book": "b1", "unit": 1, "eng": "assign", "ch": "分配；任命；指定" },
@@ -338,7 +333,5 @@ export const b1Vocab = [
 ] ←←←
   { "book": "b1", "unit": 1, "eng": "abandon", "ch": "拋棄；捨棄；放棄" },
   // ... 全部貼上 ...
-  { "book": "b1", "unit": 10, "eng": "catalog", "ch": "目錄" }
-]; ...
   { "book": "b1", "unit": 10, "eng": "catalog", "ch": "目錄" }
 ];
