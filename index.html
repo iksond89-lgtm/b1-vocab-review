@@ -1,30 +1,91 @@
-<div id="quiz-container">
-    <h2 id="eng-word">請點擊按鈕</h2>
-    <h3 id="ch-meaning" style="display:none;">中文意思會在這裡</h3>
-    <button id="btn-show" onclick="reveal()">顯示中文</button>
-    <button id="btn-next" onclick="nextWord()">下一題</button>
-</div>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>單字複習網站</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; }
+        .page { display: none; }
+        .active { display: block; }
+        button { padding: 10px 15px; margin: 5px; font-size: 16px; cursor: pointer; }
+        #quiz-card { border: 2px solid #333; padding: 20px; border-radius: 10px; max-width: 400px; margin: 20px auto; }
+    </style>
+</head>
+<body>
 
-<script type="module">
-    import { b1Vocab } from './data.js';
+    <!-- 主頁面 -->
+    <div id="page-home" class="page active">
+        <h1>選擇冊數</h1>
+        <button onclick="goToUnit(1)">第一冊</button>
+        <button onclick="alert('第二到四冊資料待補')">第二冊 - 第四冊</button>
+    </div>
 
-    let currentWord = {};
+    <!-- 單元選擇頁面 -->
+    <div id="page-units" class="page">
+        <h1>選擇 Unit</h1>
+        <div id="unit-buttons"></div>
+        <br><button onclick="showPage('page-home')">回主頁</button>
+    </div>
 
-    // 隨機取出一個單字
-    window.nextWord = function() {
-        const randomIndex = Math.floor(Math.random() * b1Vocab.length);
-        currentWord = b1Vocab[randomIndex];
-        
-        document.getElementById('eng-word').innerText = currentWord.eng;
-        document.getElementById('ch-meaning').innerText = currentWord.ch;
-        document.getElementById('ch-meaning').style.display = 'none'; // 隱藏中文
-    };
+    <!-- 測驗頁面 -->
+    <div id="page-quiz" class="page">
+        <h2 id="mode-text">英翻中</h2>
+        <div id="quiz-card">
+            <h2 id="question">單字</h2>
+            <h3 id="answer" style="display:none; color: #d32f2f;">答案</h3>
+        </div>
+        <button onclick="reveal()">看答案</button>
+        <button onclick="nextWord()">下一題</button>
+        <br><br><button onclick="showPage('page-units')">回單元列表</button>
+    </div>
 
-    // 顯示中文
-    window.reveal = function() {
-        document.getElementById('ch-meaning').style.display = 'block';
-    };
+    <script>
+        // --- 這裡貼上你的單字資料 ---
+        const vocabData = [
+            { "book": "b1", "unit": 1, "eng": "abandon", "ch": "拋棄；捨棄；放棄" },
+            // ... 請在此貼上你的完整資料 ...
+            { "book": "b1", "unit": 10, "eng": "catalog", "ch": "目錄" }
+        ];
 
-    // 初始化第一題
-    nextWord();
-</script>
+        let filteredVocab = [];
+        let currentMode = 'eng-to-ch';
+        let currentWord = {};
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function goToUnit(bookNum) {
+            const container = document.getElementById('unit-buttons');
+            container.innerHTML = '';
+            for(let i=1; i<=10; i++) {
+                let btn = document.createElement('button');
+                btn.innerText = 'Unit ' + i;
+                btn.onclick = () => startQuiz(bookNum, i);
+                container.appendChild(btn);
+            }
+            showPage('page-units');
+        }
+
+        function startQuiz(book, unit) {
+            filteredVocab = vocabData.filter(w => w.unit === unit);
+            if(filteredVocab.length === 0) { alert('該單元暫無資料'); return; }
+            showPage('page-quiz');
+            nextWord();
+        }
+
+        function nextWord() {
+            currentWord = filteredVocab[Math.floor(Math.random() * filteredVocab.length)];
+            document.getElementById('question').innerText = currentWord.eng;
+            document.getElementById('answer').innerText = currentWord.ch;
+            document.getElementById('answer').style.display = 'none';
+        }
+
+        function reveal() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
