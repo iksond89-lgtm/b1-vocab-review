@@ -1,4 +1,5 @@
-export const b1Vocab = [
+// B1 第一冊 單字資料 - 完整版
+const b1Vocab = [
   { "book": "b1", "unit": 1, "eng": "abandon", "ch": "拋棄；捨棄；放棄" },
   { "book": "b1", "unit": 1, "eng": "advantage", "ch": "優勢；益處" },
   { "book": "b1", "unit": 1, "eng": "amaze", "ch": "使吃驚" },
